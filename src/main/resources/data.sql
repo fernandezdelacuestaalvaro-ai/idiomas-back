@@ -1,0 +1,2 @@
+-- No se insertan datos aquí.
+-- Los datos ya existen en MySQL, base de datos idiomas, tabla vocabulary.
