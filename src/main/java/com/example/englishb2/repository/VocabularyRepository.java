@@ -26,4 +26,8 @@ public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
             String bloqueExamen,
             String categoria
     );
+
+	List<Vocabulary> findAllByOrderByIdAsc();
+
+	List<Vocabulary> findByNivelOrderByIdAsc(String nivel);
 }

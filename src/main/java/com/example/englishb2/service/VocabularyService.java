@@ -28,17 +28,19 @@ public class VocabularyService {
             String dificultad
     ) {
         if (session == null || session.isFinished()) {
+
             List<Vocabulary> vocabularyList;
 
             if (nivel != null) {
-                vocabularyList = vocabularyRepository.findByNivel(nivel);
+                vocabularyList =
+                        vocabularyRepository.findByNivelOrderByIdAsc(nivel);
             } else {
-                vocabularyList = vocabularyRepository.findAll();
+                vocabularyList =
+                        vocabularyRepository.findAllByOrderByIdAsc();
             }
 
-            Collections.shuffle(vocabularyList);
-
-            session = new VocabularySession(vocabularyList);
+            session =
+                    new VocabularySession(vocabularyList);
 
             return buildResponse();
         }
