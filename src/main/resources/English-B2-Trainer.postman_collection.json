@@ -1,0 +1,203 @@
+{
+  "info": {
+    "_postman_id": "b2-trainer-collection",
+    "name": "English B2 Trainer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "START - Todos",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/start",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "start"
+          ]
+        }
+      }
+    },
+    {
+      "name": "START - B2",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/start?nivel=B2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "start"
+          ],
+          "query": [
+            {
+              "key": "nivel",
+              "value": "B2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "START - C1 READING",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/start?nivel=C1&bloqueExamen=READING",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "start"
+          ],
+          "query": [
+            {
+              "key": "nivel",
+              "value": "C1"
+            },
+            {
+              "key": "bloqueExamen",
+              "value": "READING"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "CURRENT QUESTION",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/current",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "current"
+          ]
+        }
+      }
+    },
+    {
+      "name": "REVEAL TRANSLATION",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/reveal",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "reveal"
+          ]
+        }
+      }
+    },
+    {
+      "name": "ANSWER - BIEN",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"correct\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/answer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "name": "ANSWER - MAL",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"correct\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/answer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "answer"
+          ]
+        }
+      }
+    },
+    {
+      "name": "FINAL SCORE",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8100/api/vocabulary/score",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8100",
+          "path": [
+            "api",
+            "vocabulary",
+            "score"
+          ]
+        }
+      }
+    }
+  ]
+}
