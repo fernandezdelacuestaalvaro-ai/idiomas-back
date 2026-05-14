@@ -1,7 +1,6 @@
 package com.example.englishb2.service;
 
 import com.example.englishb2.dto.QuestionResponse;
-import com.example.englishb2.dto.RevealResponse;
 import com.example.englishb2.dto.ScoreResponse;
 import com.example.englishb2.model.Vocabulary;
 import com.example.englishb2.model.VocabularySession;
@@ -18,69 +17,62 @@ public class VocabularyService {
 
     private VocabularySession session;
 
-    public VocabularyService(
-            VocabularyRepository vocabularyRepository
-    ) {
-
-        this.vocabularyRepository =
-                vocabularyRepository;
+    public VocabularyService(VocabularyRepository vocabularyRepository) {
+        this.vocabularyRepository = vocabularyRepository;
     }
 
-    public QuestionResponse startSession(
+    public QuestionResponse start(
             String nivel,
-            String bloqueExamen
+            String bloqueExamen,
+            String categoria,
+            String dificultad
     ) {
+        if (session == null || session.isFinished()) {
+            List<Vocabulary> vocabularyList;
 
-        List<Vocabulary> vocabularyList;
+            if (nivel != null) {
+                vocabularyList = vocabularyRepository.findByNivel(nivel);
+            } else {
+                vocabularyList = vocabularyRepository.findAll();
+            }
 
-        if (nivel != null &&
-                bloqueExamen != null) {
+            Collections.shuffle(vocabularyList);
 
-            vocabularyList =
-                    vocabularyRepository
-                            .findByNivelAndBloqueExamen(
-                                    nivel,
-                                    bloqueExamen
-                            );
+            session = new VocabularySession(vocabularyList);
 
-        } else if (nivel != null) {
-
-            vocabularyList =
-                    vocabularyRepository
-                            .findByNivel(nivel);
-
-        } else if (bloqueExamen != null) {
-
-            vocabularyList =
-                    vocabularyRepository
-                            .findByBloqueExamen(
-                                    bloqueExamen
-                            );
-
-        } else {
-
-            vocabularyList =
-                    vocabularyRepository
-                            .findAll();
+            return buildResponse();
         }
 
-        Collections.shuffle(vocabularyList);
+        session.nextStartClick();
 
-        session =
-                new VocabularySession(
-                        vocabularyList
-                );
-
-        return getCurrentQuestion();
+        return buildResponse();
     }
 
-    public QuestionResponse getCurrentQuestion() {
+    public QuestionResponse answer(boolean correct) {
+        checkSession();
 
-        Vocabulary current =
-                session.getCurrentQuestion();
+        session.answer(correct);
+
+        return buildResponse();
+    }
+
+    public ScoreResponse score() {
+        checkSession();
+
+        double score = Math.round(session.getScoreOverTen() * 100.0) / 100.0;
+
+        return new ScoreResponse(
+                session.getCorrectAnswers(),
+                session.getTotalQuestions(),
+                score,
+                score >= 5
+        );
+    }
+
+    private QuestionResponse buildResponse() {
+        Vocabulary current = session.getCurrentQuestion();
 
         if (current == null) {
-
             return new QuestionResponse(
                     null,
                     null,
@@ -95,68 +87,31 @@ public class VocabularyService {
             );
         }
 
+        String text = session.isShowingSpanish()
+                ? current.getCastellano()
+                : current.getTraduccion();
+
+        String languageShown = session.isShowingSpanish()
+                ? "SPANISH"
+                : "ENGLISH";
+
         return new QuestionResponse(
-
                 current.getId(),
-
-                current.getTraduccion(),
-
-                null,
-
+                text,
+                languageShown,
                 current.getCategoria(),
-
                 current.getNivel(),
-
                 current.getDificultad(),
-
                 current.getBloqueExamen(),
-
                 session.getCurrentIndex() + 1,
-
                 session.getTotalQuestions(),
-
                 false
         );
     }
 
-    public RevealResponse reveal() {
-
-        Vocabulary current =
-                session.getCurrentQuestion();
-
-        return new RevealResponse(
-
-                current.getId(),
-
-                current.getTraduccion(),
-
-                current.getCastellano()
-        );
-    }
-
-    public QuestionResponse answer(
-            boolean correct
-    ) {
-
-        session.answer(correct);
-
-        return getCurrentQuestion();
-    }
-
-    public ScoreResponse score() {
-
-        double score =
-                session.getScoreOverTen();
-
-        return new ScoreResponse(
-
-                session.getCorrectAnswers(),
-
-                session.getTotalQuestions(),
-
-                score,
-
-                score >= 5
-        );
+    private void checkSession() {
+        if (session == null) {
+            throw new IllegalStateException("Primero pulsa START.");
+        }
     }
 }
